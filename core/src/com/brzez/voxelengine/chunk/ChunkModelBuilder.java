@@ -57,7 +57,7 @@ public class ChunkModelBuilder {
         final float halfSize = blockSize * .5f;
 
         final Vector3 position = new Vector3(x,y,z).scl(blockSize);
-//
+
         if((sides & ChunkBlockSide.FRONT) != 0) {
             addIndex(0, 1, 2, 2, 3, 0);
             addVertex(position.x + -halfSize, position.y + halfSize, position.z + halfSize);
@@ -72,6 +72,13 @@ public class ChunkModelBuilder {
             addVertex(position.x + -halfSize, position.y + halfSize, position.z - halfSize);
             addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize);
         }
+        if((sides & ChunkBlockSide.TOP) != 0) {
+            addIndex(0, 1, 2, 2, 3, 0);
+            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize);
+            addVertex(position.x - halfSize, position.y + halfSize, position.z - halfSize);
+            addVertex(position.x - halfSize, position.y + halfSize, position.z + halfSize);
+            addVertex(position.x + halfSize,  position.y + halfSize, position.z + halfSize);
+        }
         if((sides & ChunkBlockSide.BOTTOM) != 0) {
             addIndex(0, 1, 2, 2, 3, 0);
             addVertex(position.x - halfSize, position.y - halfSize, position.z + halfSize);
@@ -79,54 +86,20 @@ public class ChunkModelBuilder {
             addVertex(position.x + halfSize, position.y - halfSize, position.z - halfSize);
             addVertex(position.x + halfSize,  position.y - halfSize, position.z + halfSize);
         }
-//        // bottom
-//        meshBuilder.addMesh(new float[]{
-//                -1,  -1, 1,
-//                -1,  -1, -1,
-//                1,   -1, -1,
-//                1,   -1, 1,
-//                -1,  -1, 1,
-//        }, new short[]{
-//                0,1,2,
-//                2,3,4
-//        });
-//
-//        // top
-//        meshBuilder.addMesh(new float[]{
-//                1,   1, -1,
-//                -1,  1, -1,
-//                -1,  1, 1,
-//                1,   1, 1,
-//                1,   1, -1,
-//        }, new short[]{
-//                0,1,2,
-//                2,3,4
-//        });
-//
-//
-//        // left
-//        meshBuilder.addMesh(new float[]{
-//                -1, 1, -1,
-//                -1, -1, -1,
-//                -1, -1, 1,
-//                -1, 1, 1,
-//                -1, 1, -1
-//        }, new short[]{
-//                0,1,2,
-//                2,3,4
-//        });
-//
-//        // right
-//        meshBuilder.addMesh(new float[]{
-//                1, -1, 1,
-//                1, -1, -1,
-//                1, 1, -1,
-//                1, 1, 1,
-//                1, -1, 1
-//        }, new short[]{
-//                0,1,2,
-//                2,3,4
-//        });
+        if((sides & ChunkBlockSide.LEFT) != 0) {
+            addIndex(0, 1, 2, 2, 3, 0);
+            addVertex(position.x - halfSize, position.y + halfSize, position.z - halfSize);
+            addVertex(position.x - halfSize, position.y - halfSize, position.z - halfSize);
+            addVertex(position.x - halfSize, position.y - halfSize, position.z + halfSize);
+            addVertex(position.x - halfSize,  position.y + halfSize, position.z + halfSize);
+        }
+        if((sides & ChunkBlockSide.RIGHT) != 0) {
+            addIndex(0, 1, 2, 2, 3, 0);
+            addVertex(position.x + halfSize, position.y - halfSize, position.z + halfSize);
+            addVertex(position.x + halfSize, position.y - halfSize, position.z - halfSize);
+            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize);
+            addVertex(position.x + halfSize,  position.y + halfSize, position.z + halfSize);
+        }
     }
 
     protected int getBlockSides(int x,int y, int z){
@@ -144,7 +117,7 @@ public class ChunkModelBuilder {
         ModelBuilder builder = new ModelBuilder();
         builder.begin();
         MeshPartBuilder meshBuilder;
-        meshBuilder = builder.part("potato", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position/* | VertexAttributes.Usage.Normal*/, new Material(ColorAttribute.createDiffuse(Color.FOREST)));
+        meshBuilder = builder.part("potato", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position /*| VertexAttributes.Usage.Normal*/, new Material(ColorAttribute.createDiffuse(Color.FOREST)));
 
         for(int x = 0; x < chunkData.size; x++){
             for(int y = 0;y < chunkData.size; y++){
