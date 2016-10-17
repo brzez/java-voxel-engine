@@ -14,9 +14,8 @@ import com.brzez.voxelengine.chunk.ChunkData;
 import com.brzez.voxelengine.chunk.ChunkModelBuilder;
 
 public class VoxelEngine extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
 	PerspectiveCamera camera;
+    Model chunkModel;
     ModelInstance instance;
     ModelBatch modelBatch;
     Environment environment;
@@ -36,18 +35,11 @@ public class VoxelEngine extends ApplicationAdapter {
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
-        ModelBuilder modelBuilder = new ModelBuilder();
-        Model model = modelBuilder.createBox(5f, 5f, 5f,
-                new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
-        instance = new ModelInstance(model);
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-
-        instance = new ModelInstance(wut());
+        chunkModel = createChunkModel();
+        instance = new ModelInstance(chunkModel);
 	}
 
-    private Model wut(){
+    private Model createChunkModel(){
         ChunkData d = new ChunkData(16);
         final float halfSize = d.size / 2;
         // fill the chunk data w/ some random crap
@@ -98,7 +90,6 @@ public class VoxelEngine extends ApplicationAdapter {
 
     @Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+        chunkModel.dispose();
 	}
 }
