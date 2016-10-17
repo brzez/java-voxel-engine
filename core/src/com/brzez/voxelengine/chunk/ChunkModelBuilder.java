@@ -56,6 +56,20 @@ public class ChunkModelBuilder {
         vertexBufferPosition = indexBufferPosition = nVerts = 0;
     }
 
+    protected boolean isEmpty(int x,int y,int z){
+        if(x < 0 || x > chunkData.size){
+            return false;
+        }
+        if(y < 0 || y > chunkData.size){
+            return false;
+        }
+        if(z < 0 || z > chunkData.size){
+            return false;
+        }
+
+        return chunkData.get(x,y,z) == 0;
+    }
+
     protected void addBlock(int x,int y, int z){
         final int sides = getBlockSides(x,y,z);
         final float halfSize = blockSize * .5f;
@@ -80,20 +94,20 @@ public class ChunkModelBuilder {
             addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize, normal);
         }
         if((sides & ChunkBlockSide.TOP) != 0) {
-            normal.set(0,1,0);
-            addIndex(0, 1, 2, 2, 3, 0);
-            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize, normal);
-            addVertex(position.x - halfSize, position.y + halfSize, position.z - halfSize, normal);
-            addVertex(position.x - halfSize, position.y + halfSize, position.z + halfSize, normal);
-            addVertex(position.x + halfSize,  position.y + halfSize, position.z + halfSize, normal);
-        }
-        if((sides & ChunkBlockSide.BOTTOM) != 0) {
             normal.set(0,-1,0);
             addIndex(0, 1, 2, 2, 3, 0);
             addVertex(position.x - halfSize, position.y - halfSize, position.z + halfSize, normal);
             addVertex(position.x - halfSize, position.y - halfSize, position.z - halfSize, normal);
             addVertex(position.x + halfSize, position.y - halfSize, position.z - halfSize, normal);
             addVertex(position.x + halfSize,  position.y - halfSize, position.z + halfSize, normal);
+        }
+        if((sides & ChunkBlockSide.BOTTOM) != 0) {
+            normal.set(0,1,0);
+            addIndex(0, 1, 2, 2, 3, 0);
+            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize, normal);
+            addVertex(position.x - halfSize, position.y + halfSize, position.z - halfSize, normal);
+            addVertex(position.x - halfSize, position.y + halfSize, position.z + halfSize, normal);
+            addVertex(position.x + halfSize,  position.y + halfSize, position.z + halfSize, normal);
         }
         if((sides & ChunkBlockSide.LEFT) != 0) {
             normal.set(-1,0,0);
@@ -117,9 +131,29 @@ public class ChunkModelBuilder {
         if(chunkData.get(x,y,z) == 0){
             return 0;
         }
-        return ChunkBlockSide.TOP | ChunkBlockSide.BOTTOM
-                | ChunkBlockSide.LEFT | ChunkBlockSide.RIGHT
-                | ChunkBlockSide.FRONT | ChunkBlockSide.BACK;
+        int sides = 0;
+
+        if(isEmpty(x,y,z + 1)){
+            sides |= ChunkBlockSide.FRONT;
+        }
+        if(isEmpty(x,y,z - 1)){
+            sides |= ChunkBlockSide.BACK;
+        }
+
+        if(isEmpty(x,y - 1,z)){
+            sides |= ChunkBlockSide.TOP;
+        }
+        if(isEmpty(x,y + 1,z)){
+            sides |= ChunkBlockSide.BOTTOM;
+        }
+        if(isEmpty(x - 1,y,z)){
+            sides |= ChunkBlockSide.LEFT;
+        }
+        if(isEmpty(x + 1,y,z)){
+            sides |= ChunkBlockSide.RIGHT;
+        }
+
+        return sides;
     }
 
     public Model build(ChunkData chunkData)
@@ -137,7 +171,7 @@ public class ChunkModelBuilder {
                 }
             }
         }
-
+        System.out.println("Verts: " + nVerts + " tris: " + (nVerts / 6));
         addMeshFromBuffers(meshBuilder);
         return builder.end();
     }
