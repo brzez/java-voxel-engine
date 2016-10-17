@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector3;
 import com.brzez.voxelengine.chunk.ChunkData;
 import com.brzez.voxelengine.chunk.ChunkModelBuilder;
 
@@ -48,11 +49,13 @@ public class VoxelEngine extends ApplicationAdapter {
 
     private Model wut(){
         ChunkData d = new ChunkData(16);
+        final float halfSize = d.size / 2;
         // fill the chunk data w/ some random crap
         for(int x = d.size; x-->0;){
             for(int y = d.size; y-->0;){
                 for(int z = d.size; z-->0;){
-                    if(Math.random() > .5){
+                    Vector3 len = new Vector3(halfSize - x,halfSize - y,halfSize - z);
+                    if(len.len() / d.size > .4f){
                         continue;
                     }
                     d.set(x, y, z, (byte)1);
