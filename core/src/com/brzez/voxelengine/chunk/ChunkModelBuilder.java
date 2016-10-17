@@ -22,15 +22,19 @@ public class ChunkModelBuilder {
     private ChunkData chunkData;
 
     public ChunkModelBuilder() {
-        vertexBuffer = new float[16 * 16 * 16 * 3 * 2 * 8]; // no idea how big it should be. Don't care for now.
+        vertexBuffer = new float[16 * 16 * 16 * 3 * 2 * 8 * 2]; // no idea how big it should be. Don't care for now.
         indexBuffer  = new short[1337 * 8 * 8]; // 8-)
     }
 
-    protected void addVertex(float x, float y, float z){
+    protected void addVertex(float x, float y, float z, Vector3 normal){
         nVerts++;
         vertexBuffer[vertexBufferPosition++] = x;
         vertexBuffer[vertexBufferPosition++] = y;
         vertexBuffer[vertexBufferPosition++] = z;
+
+        vertexBuffer[vertexBufferPosition++] = normal.x;
+        vertexBuffer[vertexBufferPosition++] = normal.y;
+        vertexBuffer[vertexBufferPosition++] = normal.z;
     }
 
     protected void addIndex(int... indices){
@@ -57,48 +61,55 @@ public class ChunkModelBuilder {
         final float halfSize = blockSize * .5f;
 
         final Vector3 position = new Vector3(x,y,z).scl(blockSize);
+        Vector3 normal = new Vector3();
 
         if((sides & ChunkBlockSide.FRONT) != 0) {
+            normal.set(0, 0, 1);
             addIndex(0, 1, 2, 2, 3, 0);
-            addVertex(position.x + -halfSize, position.y + halfSize, position.z + halfSize);
-            addVertex(position.x + -halfSize, position.y + -halfSize, position.z + halfSize);
-            addVertex(position.x + halfSize, position.y + -halfSize, position.z + halfSize);
-            addVertex(position.x + halfSize, position.y + halfSize, position.z + halfSize);
+            addVertex(position.x + -halfSize, position.y + halfSize, position.z + halfSize, normal);
+            addVertex(position.x + -halfSize, position.y + -halfSize, position.z + halfSize, normal);
+            addVertex(position.x + halfSize, position.y + -halfSize, position.z + halfSize, normal);
+            addVertex(position.x + halfSize, position.y + halfSize, position.z + halfSize, normal);
         }
         if((sides & ChunkBlockSide.BACK) != 0) {
+            normal.set(0, 0, -1);
             addIndex(0, 1, 2, 2, 3, 0);
-            addVertex(position.x + halfSize, position.y + -halfSize, position.z - halfSize);
-            addVertex(position.x + -halfSize, position.y + -halfSize, position.z - halfSize);
-            addVertex(position.x + -halfSize, position.y + halfSize, position.z - halfSize);
-            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize);
+            addVertex(position.x + halfSize, position.y + -halfSize, position.z - halfSize, normal);
+            addVertex(position.x + -halfSize, position.y + -halfSize, position.z - halfSize, normal);
+            addVertex(position.x + -halfSize, position.y + halfSize, position.z - halfSize, normal);
+            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize, normal);
         }
         if((sides & ChunkBlockSide.TOP) != 0) {
+            normal.set(0,1,0);
             addIndex(0, 1, 2, 2, 3, 0);
-            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize);
-            addVertex(position.x - halfSize, position.y + halfSize, position.z - halfSize);
-            addVertex(position.x - halfSize, position.y + halfSize, position.z + halfSize);
-            addVertex(position.x + halfSize,  position.y + halfSize, position.z + halfSize);
+            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize, normal);
+            addVertex(position.x - halfSize, position.y + halfSize, position.z - halfSize, normal);
+            addVertex(position.x - halfSize, position.y + halfSize, position.z + halfSize, normal);
+            addVertex(position.x + halfSize,  position.y + halfSize, position.z + halfSize, normal);
         }
         if((sides & ChunkBlockSide.BOTTOM) != 0) {
+            normal.set(0,-1,0);
             addIndex(0, 1, 2, 2, 3, 0);
-            addVertex(position.x - halfSize, position.y - halfSize, position.z + halfSize);
-            addVertex(position.x - halfSize, position.y - halfSize, position.z - halfSize);
-            addVertex(position.x + halfSize, position.y - halfSize, position.z - halfSize);
-            addVertex(position.x + halfSize,  position.y - halfSize, position.z + halfSize);
+            addVertex(position.x - halfSize, position.y - halfSize, position.z + halfSize, normal);
+            addVertex(position.x - halfSize, position.y - halfSize, position.z - halfSize, normal);
+            addVertex(position.x + halfSize, position.y - halfSize, position.z - halfSize, normal);
+            addVertex(position.x + halfSize,  position.y - halfSize, position.z + halfSize, normal);
         }
         if((sides & ChunkBlockSide.LEFT) != 0) {
+            normal.set(-1,0,0);
             addIndex(0, 1, 2, 2, 3, 0);
-            addVertex(position.x - halfSize, position.y + halfSize, position.z - halfSize);
-            addVertex(position.x - halfSize, position.y - halfSize, position.z - halfSize);
-            addVertex(position.x - halfSize, position.y - halfSize, position.z + halfSize);
-            addVertex(position.x - halfSize,  position.y + halfSize, position.z + halfSize);
+            addVertex(position.x - halfSize, position.y + halfSize, position.z - halfSize, normal);
+            addVertex(position.x - halfSize, position.y - halfSize, position.z - halfSize, normal);
+            addVertex(position.x - halfSize, position.y - halfSize, position.z + halfSize, normal);
+            addVertex(position.x - halfSize,  position.y + halfSize, position.z + halfSize, normal);
         }
         if((sides & ChunkBlockSide.RIGHT) != 0) {
+            normal.set(1,0,0);
             addIndex(0, 1, 2, 2, 3, 0);
-            addVertex(position.x + halfSize, position.y - halfSize, position.z + halfSize);
-            addVertex(position.x + halfSize, position.y - halfSize, position.z - halfSize);
-            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize);
-            addVertex(position.x + halfSize,  position.y + halfSize, position.z + halfSize);
+            addVertex(position.x + halfSize, position.y - halfSize, position.z + halfSize, normal);
+            addVertex(position.x + halfSize, position.y - halfSize, position.z - halfSize, normal);
+            addVertex(position.x + halfSize, position.y + halfSize, position.z - halfSize, normal);
+            addVertex(position.x + halfSize,  position.y + halfSize, position.z + halfSize, normal);
         }
     }
 
@@ -117,7 +128,7 @@ public class ChunkModelBuilder {
         ModelBuilder builder = new ModelBuilder();
         builder.begin();
         MeshPartBuilder meshBuilder;
-        meshBuilder = builder.part("potato", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position /*| VertexAttributes.Usage.Normal*/, new Material(ColorAttribute.createDiffuse(Color.FOREST)));
+        meshBuilder = builder.part("potato", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material(ColorAttribute.createDiffuse(Color.FOREST)));
 
         for(int x = 0; x < chunkData.size; x++){
             for(int y = 0;y < chunkData.size; y++){
