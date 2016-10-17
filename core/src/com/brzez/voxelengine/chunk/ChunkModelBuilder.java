@@ -75,6 +75,10 @@ public class ChunkModelBuilder {
         final float halfSize = blockSize * .5f;
 
         final Vector3 position = new Vector3(x,y,z).scl(blockSize);
+
+        // offset so (0,0,0) is the center
+        position.sub(chunkData.size * blockSize * .5f);
+
         Vector3 normal = new Vector3();
 
         if((sides & ChunkBlockSide.FRONT) != 0) {
