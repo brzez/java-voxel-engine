@@ -1,4 +1,4 @@
-package com.brzez.voxelengine;
+package com.brzez.voxelengine.chunk;
 
 public class ChunkData {
     public final short size;
@@ -13,6 +13,7 @@ public class ChunkData {
     {
         return data[x * size + y * size * size + z];
     }
+
 
     public byte set(int x, int y, int z, byte value)
     {

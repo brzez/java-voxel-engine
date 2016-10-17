@@ -2,15 +2,15 @@ package com.brzez.voxelengine;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.model.MeshPart;
-import com.badlogic.gdx.graphics.g3d.model.data.ModelData;
-import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.brzez.voxelengine.chunk.ChunkData;
+import com.brzez.voxelengine.chunk.ChunkModelBuilder;
 
 public class VoxelEngine extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -67,14 +67,33 @@ public class VoxelEngine extends ApplicationAdapter {
 	public void render () {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        instance.transform.rotate(1f,1f,0f, 1);
+
+        keyboardControls();
 
         modelBatch.begin(camera);
         modelBatch.render(instance, environment);
         modelBatch.end();
 	}
-	
-	@Override
+
+    private void keyboardControls() {
+        final float speed = 2f;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+            instance.transform.rotate(0f,1f,0f, speed);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            instance.transform.rotate(0f,1f,0f, -speed);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+            instance.transform.rotate(1f,0f,0f, speed);
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+            instance.transform.rotate(1f,1f,0f, -speed);
+        }
+
+    }
+
+    @Override
 	public void dispose () {
 		batch.dispose();
 		img.dispose();
