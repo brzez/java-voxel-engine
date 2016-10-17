@@ -15,17 +15,81 @@ public class ChunkModelBuilder {
         ModelBuilder builder = new ModelBuilder();
         builder.begin();
         MeshPartBuilder meshBuilder;
-        meshBuilder = builder.part("potato", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material(ColorAttribute.createDiffuse(Color.FOREST)));
+        meshBuilder = builder.part("potato", GL20.GL_TRIANGLES, VertexAttributes.Usage.Position/* | VertexAttributes.Usage.Normal*/, new Material(ColorAttribute.createDiffuse(Color.FOREST)));
 
-        float[] verts   = new float[3000];
-        short[] indices = new short[1000];
-        for(int i=0;i<verts.length; i++){
-            verts[i] = (float)(Math.random() * 2 - 1) * 10f;
-        }
-        for(int i=0;i<indices.length; i++){
-            indices[i] = (short)(Math.random() * indices.length);
-        }
-        meshBuilder.addMesh(verts, indices);
+        // front
+        meshBuilder.addMesh(new float[]{
+                -1,1,  1,
+                -1,-1, 1,
+                1,-1,  1,
+                1,1,   1,
+                -1,1,  1
+        }, new short[]{
+                0,1,2,
+                2,3,4
+        });
+
+        // back
+        meshBuilder.addMesh(new float[]{
+                1,-1,  -1,
+                -1,-1, -1,
+                -1,1,  -1,
+
+                1,1,   -1,
+                1,-1,  -1,
+        }, new short[]{
+                0,1,2,
+                2,3,4
+        });
+
+        // bottom
+        meshBuilder.addMesh(new float[]{
+                -1,  -1, 1,
+                -1,  -1, -1,
+                1,   -1, -1,
+                1,   -1, 1,
+                -1,  -1, 1,
+        }, new short[]{
+                0,1,2,
+                2,3,4
+        });
+
+        // top
+        meshBuilder.addMesh(new float[]{
+                1,   1, -1,
+                -1,  1, -1,
+                -1,  1, 1,
+                1,   1, 1,
+                1,   1, -1,
+        }, new short[]{
+                0,1,2,
+                2,3,4
+        });
+
+
+        // left
+        meshBuilder.addMesh(new float[]{
+                -1, 1, -1,
+                -1, -1, -1,
+                -1, -1, 1,
+                -1, 1, 1,
+                -1, 1, -1
+        }, new short[]{
+                0,1,2,
+                2,3,4
+        });
+
+        // right
+        meshBuilder.addMesh(new float[]{
+                1, -1, 1,
+                1, -1, -1,
+                1, 1, -1,
+                1, 1, 1,
+                1, -1, 1
+        }, new short[]{
+                0,1,2,
+                2,3,4
+        });
         return builder.end();
     }
 }
